@@ -1,0 +1,11 @@
+# Store targets for thanos-query to use for searching
+- targets:
+  # Prometheus sidecars for the short term metrics
+  - thanos-sidecar:10901
+  # Store gateway for long term metrics
+  - thanos-store:10901
+# Another instance of Prometheus/Thanos to be included in the queries
+# - targets:
+  # - prometheus-0.thanos-sidecar.monitoring:10901
+  # - prometheus-1.thanos-sidecar.monitoring:10901
+  # - thanos-store.monitoring:10901

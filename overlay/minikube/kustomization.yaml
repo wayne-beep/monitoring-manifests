@@ -1,0 +1,70 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+bases:
+  - ../../base/thanos-query
+  - ../../base/thanos-compact
+  - ../../base/thanos-store
+  - ../../base/prometheus
+  - ../../base/thanos-query-frontend
+  - ../../base/n9e-server
+  - ../../base/n9e-webapi
+
+commonLabels:
+  cluster: minikube
+  env: test
+
+resources:
+  - ingresses/prometheus-ingress.yaml
+  - ingresses/thanos-query-ingress.yaml
+  - ingresses/thanos-query-frontend-ingress.yaml
+  - ingresses/n9e-webapi-ingress.yaml
+
+# patchesStrategicMerge:
+#   - patches/prometheus.yaml
+#   - patches/thanos-query.yaml
+#   - patches/thanos-store.yaml
+configMapGenerator:
+  # description: application alerts handled by thanos-rule
+  # used by: Thanos Rule
+  # - name: alerts
+  #   files:
+  #     - prometheus-alerts.yaml=configs/prometheus-alerts.yaml
+  # description: Prometheus configuration
+  # used by: Prometheus
+  - name: prometheus
+    files:
+      - prometheus.yaml.tmpl=configs/prometheus.yaml.tmpl
+  # description: Alerts to monitor Thanos infrastructure
+  # used by: Prometheus
+  # - name: thanos-rule-alerts
+  #   files:
+  #     - thanos-rule.yaml=configs/thanos-rule-alerts.yaml
+  # description: Discovery config for TQ instances used to evaluate alert rules
+  # used by: Thanos Rule
+  # - name: thanos-rule
+  #   files:
+  #     - query-sd.yaml=configs/query-sd.yaml
+  # description: config for access to object storage
+  # used by: Prometheus, Thanos Store, Thanos Compact
+  - name: thanos-storage
+    files:
+      - config.yaml=configs/thanos-storage.yaml
+  # description: Discovery config of Prometheus instances to aggregate query
+  #   results
+  # used by: Thanos Query
+  - name: thanos-query
+    files:
+      - store-sd.yaml=configs/store-sd.yaml
+  # used by: n9e server
+  - name: n9e-server-config
+    files:
+      - server.conf=configs/n9e-server.conf
+  - name: n9e-server-script
+    files:
+      - n9e-script.py=configs/n9e-script.py
+  - name: n9e-webapi-config
+    files:
+      - webapi.conf=configs/n9e-webapi.conf
+  - name: n9e-template
+    files:
+      - wecom.tpl=configs/n9e-template.conf

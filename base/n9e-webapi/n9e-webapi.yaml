@@ -1,0 +1,56 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: n9e-webapi
+spec:
+  type: ClusterIP
+  ports:
+    - port: 18000
+      targetPort: 18000
+  selector:
+    app: n9e-webapi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: n9e-webapi
+  labels:
+    app: n9e-webapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: n9e-webapi
+  template:
+    metadata:
+      labels:
+        app: n9e-webapi
+    spec:
+      containers:
+        - name: n9e-webapi
+          image: n9e
+          imagePullPolicy: Always
+          env:
+          - name: TZ
+            value: Asia/Shanghai
+          command:
+            - "/app/n9e"
+            - "webapi"
+            - "-c"
+            - "/etc/n9e/webapi.conf"
+          ports:
+            - containerPort: 18000
+          volumeMounts:
+            - name: n9e-config
+              mountPath: /etc/n9e
+            # - name: n9e-metrics
+            #   mountPath: /etc/metrics.yaml
+            #   subPath: metrics.yaml
+      volumes:
+        - name: n9e-config
+          configMap:
+            name: n9e-webapi-config
+        # - name: n9e-metrics
+        #   configMap:
+        #     name: n9e-metrics
