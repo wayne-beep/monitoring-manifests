@@ -1,0 +1,42 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+bases:
+  - ../../base/prometheus
+  - ../../base/n9e-server
+
+commonLabels:
+  cluster: cluster-1
+  env: test
+
+resources:
+  - ingresses/prometheus-ingress.yaml
+
+# patchesStrategicMerge:
+#   - patches/prometheus.yaml
+#   - patches/thanos-query.yaml
+#   - patches/thanos-store.yaml
+configMapGenerator:
+  # description: application alerts handled by thanos-rule
+  # used by: Thanos Rule
+  # - name: alerts
+  #   files:
+  #     - prometheus-alerts.yaml=configs/prometheus-alerts.yaml
+  # description: Prometheus configuration
+  # used by: Prometheus
+  - name: prometheus
+    files:
+      - prometheus.yaml.tmpl=configs/prometheus.yaml.tmpl
+ 
+  - name: thanos-storage
+    files:
+      - config.yaml=configs/thanos-storage.yaml
+  # used by: n9e server
+  - name: n9e-server-config
+    files:
+      - server.conf=configs/n9e-server.conf
+  - name: n9e-server-script
+    files:
+      - n9e-script.py=configs/n9e-script.py
+  - name: n9e-template
+    files:
+      - wecom.tpl=configs/n9e-template.conf

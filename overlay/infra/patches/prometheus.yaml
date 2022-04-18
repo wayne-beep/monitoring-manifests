@@ -1,0 +1,20 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: prometheus
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: prometheus
+          env:
+            - name: PROMETHEUS_URL
+              value: "https://prometheus.overlay.aws.example.com"
+          resources:
+            requests:
+              cpu: 0m
+              memory: 32Mi
+            limits:
+              memory: 256Mi
