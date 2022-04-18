@@ -163,12 +163,12 @@ spec:
             periodSeconds: 60
             successThreshold: 1
             timeoutSeconds: 1
-          resources: {}
-            # requests:
-            #   cpu: 50m
-            #   memory: 1500Mi
-            # limits:
-            #   memory: 4000Mi
+          resources:
+            requests:
+              cpu: 0
+              memory: 0
+            limits:
+              memory: 4000Mi
           volumeMounts:
             - name: config-volume
               mountPath: /etc/prometheus
