@@ -19,8 +19,8 @@ resources:
   - ingresses/thanos-query-frontend-ingress.yaml
   - ingresses/n9e-webapi-ingress.yaml
 
-# patchesStrategicMerge:
-#   - patches/prometheus.yaml
+patchesStrategicMerge:
+  - patches/prometheus.yaml
 #   - patches/thanos-query.yaml
 #   - patches/thanos-store.yaml
 configMapGenerator:

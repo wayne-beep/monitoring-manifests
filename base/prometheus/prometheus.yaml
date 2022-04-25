@@ -108,7 +108,7 @@ spec:
               containerPort: 10902
             - name: grpc
               containerPort: 10901
-          resources: {}
+          # resources: {}
             # requests:
             #   cpu: 0m
             #   memory: 32Mi
